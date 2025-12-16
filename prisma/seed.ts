@@ -1,10 +1,10 @@
 import { PrismaPg } from "@prisma/adapter-pg";
 
 import { PrismaClient } from "@/generated/prisma/client";
-import { env } from "@/lib/env";
+import { envServer } from "@/lib/env-server";
 
 const prisma = new PrismaClient({
-  adapter: new PrismaPg({ connectionString: env.DATABASE_URL }),
+  adapter: new PrismaPg({ connectionString: envServer.DATABASE_URL }),
 });
 
 async function seedDatabase() {

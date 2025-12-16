@@ -6,7 +6,7 @@ import Stripe from "stripe";
 import z from "zod";
 
 import { protectedActionClient } from "@/lib/action-client";
-import { env } from "@/lib/env";
+import { envServer } from "@/lib/env-server";
 import { prisma } from "@/lib/prisma";
 
 const inputSchema = z.object({
@@ -17,12 +17,12 @@ const inputSchema = z.object({
 export const createBookingCheckoutSession = protectedActionClient
   .inputSchema(inputSchema)
   .action(async ({ parsedInput: { serviceId, date }, ctx: { user } }) => {
-    if (!env.STRIPE_SECRET_KEY) {
+    if (!envServer.STRIPE_SECRET_KEY) {
       returnValidationErrors(inputSchema, {
         _errors: ["Chave de API do Stripe não encontrada."],
       });
     }
-    const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
+    const stripe = new Stripe(envServer.STRIPE_SECRET_KEY, {
       apiVersion: "2025-07-30.basil",
     });
     const service = await prisma.barbershopService.findUnique({
@@ -58,8 +58,8 @@ export const createBookingCheckoutSession = protectedActionClient
     const checkoutSession = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       mode: "payment",
-      success_url: `${env.NEXT_PUBLIC_APP_URL}`,
-      cancel_url: `${env.NEXT_PUBLIC_APP_URL}`,
+      success_url: `${envServer.NEXT_PUBLIC_APP_URL}`,
+      cancel_url: `${envServer.NEXT_PUBLIC_APP_URL}`,
       metadata: {
         serviceId: service.id,
         barbershopId: service.barbershopId,

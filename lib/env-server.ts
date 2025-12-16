@@ -18,4 +18,4 @@ const envSchema = z.object({
   STRIPE_WEBHOOK_SECRET_KEY: z.string(),
 });
 
-export const env = envSchema.parse(process.env);
+export const envServer = envSchema.parse(process.env);

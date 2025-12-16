@@ -7,7 +7,7 @@ import Stripe from "stripe";
 import { z } from "zod";
 
 import { protectedActionClient } from "@/lib/action-client";
-import { env } from "@/lib/env";
+import { envServer } from "@/lib/env-server";
 import { prisma } from "@/lib/prisma";
 
 const inputSchema = z.object({
@@ -43,13 +43,13 @@ export const cancelBooking = protectedActionClient
       });
     }
     if (booking.stripeChargeId) {
-      if (!env.STRIPE_SECRET_KEY) {
+      if (!envServer.STRIPE_SECRET_KEY) {
         returnValidationErrors(inputSchema, {
           _errors: ["Chave de API do Stripe não encontrada."],
         });
       }
       try {
-        const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
+        const stripe = new Stripe(envServer.STRIPE_SECRET_KEY, {
           apiVersion: "2025-07-30.basil",
         });
         await stripe.refunds.create({
