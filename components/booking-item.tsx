@@ -21,6 +21,10 @@ const BookingItem = ({ booking }: BookingItemProps) => {
   const [sheetIsOpen, setSheetIsOpen] = useState(false);
   const status = getBookingStatus(booking.date, booking.cancelledAt);
 
+  // Adiciona 3 horas para corrigir o fuso horário
+  const localDate = new Date(booking.date);
+  localDate.setHours(localDate.getHours() + 3);
+  
   return (
     <Sheet open={sheetIsOpen} onOpenChange={setSheetIsOpen}>
       <SheetTrigger asChild>
@@ -46,10 +50,10 @@ const BookingItem = ({ booking }: BookingItemProps) => {
 
           <div className="flex h-full w-26.5 flex-col items-center justify-center border-l py-3">
             <p className="text-xs capitalize">
-              {format(booking.date, "MMMM", { locale: ptBR })}
+              {format(localDate, "MMMM", { locale: ptBR })}
             </p>
-            <p className="text-2xl">{format(booking.date, "dd")}</p>
-            <p className="text-xs">{format(booking.date, "HH:mm")}</p>
+            <p className="text-2xl">{format(localDate, "dd")}</p>
+            <p className="text-xs">{format(localDate, "HH:mm")}</p>
           </div>
         </Card>
       </SheetTrigger>

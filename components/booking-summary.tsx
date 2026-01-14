@@ -20,8 +20,12 @@ const BookingSummary = ({
   date,
   time,
 }: BookingSummaryProps) => {
-  const formattedTime = time ?? format(date, "HH:mm");
-
+  // Adiciona 3 horas para corrigir o fuso horário
+  const localDate = new Date(date);
+  localDate.setHours(localDate.getHours() + 3);
+  
+  const formattedTime = time ?? format(localDate, "HH:mm");
+  
   return (
     <Card>
       <CardContent className="flex flex-col gap-3">
@@ -33,7 +37,7 @@ const BookingSummary = ({
         <div className="flex items-center justify-between">
           <p className="text-muted-foreground text-sm">Data</p>
           <p className="text-sm">
-            {format(date, "d 'de' MMMM", { locale: ptBR })}
+            {format(localDate, "d 'de' MMMM", { locale: ptBR })}
           </p>
         </div>
 
