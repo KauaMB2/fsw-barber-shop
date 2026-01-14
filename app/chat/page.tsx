@@ -4,7 +4,7 @@ import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
 import { BotMessageSquare, ChevronLeft, Send } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Streamdown } from "streamdown";
 
 import { Button } from "@/components/ui/button";
@@ -17,7 +17,6 @@ const ChatPage = () => {
     }),
   });
   const [input, setInput] = useState("");
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (input.trim() && status === "ready") {
@@ -25,12 +24,27 @@ const ChatPage = () => {
       setInput("");
     }
   };
-
   const isLoading = status === "submitted" || status === "streaming";
+  useEffect(() => {
+    const lastMessage = messages[messages.length - 1];
+    if (lastMessage?.role === "assistant") {
+      const allText = lastMessage.parts
+        .filter((part) => part.type === "text")
+        .map((part) => part.text)
+        .join("");
+
+      const checkoutUrlMatch = allText.match(/\[CHECKOUT_URL:(.*?)\]/);
+      if (checkoutUrlMatch) {
+        const checkoutUrl = checkoutUrlMatch[1];
+        setTimeout(() => {
+          window.location.href = checkoutUrl;
+        }, 1500);
+      }
+    }
+  }, [messages]);
 
   return (
     <div className="flex min-h-screen flex-col">
-      {/* Header */}
       <header className="flex items-center justify-between px-5 pt-6">
         <Link href="/">
           <Button variant="ghost" size="icon" className="size-6 hover:cursor-pointer">
@@ -42,8 +56,6 @@ const ChatPage = () => {
         </h1>
         <div className="size-6" />
       </header>
-
-      {/* Status Message */}
       <div className="px-5 pt-6">
         <div className="rounded-xl border p-3">
           <p className="text-muted-foreground text-center text-sm">
@@ -51,10 +63,7 @@ const ChatPage = () => {
           </p>
         </div>
       </div>
-
-      {/* Messages */}
       <div className="flex-1 overflow-y-auto pb-32">
-        {/* Initial AI Message */}
         <div className="flex gap-2 px-3 pt-6 pr-14">
           <div className="bg-primary/12 flex size-8 shrink-0 items-center justify-center rounded-full border">
             <BotMessageSquare className="text-primary size-3.5" />
@@ -70,8 +79,6 @@ const ChatPage = () => {
             as barbearias disponíveis perto de você e responder às suas dúvidas.
           </p>
         </div>
-
-        {/* Chat Messages */}
         {messages.map((message) => (
           <div key={message.id} className="pt-6">
             {message.role === "assistant" ? (
@@ -82,7 +89,9 @@ const ChatPage = () => {
                 <div className="prose prose-sm max-w-none text-sm leading-relaxed">
                   {message.parts.map((part, index) =>
                     part.type === "text" ? (
-                      <Streamdown key={index}>{part.text}</Streamdown>
+                      <Streamdown key={index}>
+                        {part.text.replace(/\[CHECKOUT_URL:.*?\]/g, "")}
+                      </Streamdown>
                     ) : null,
                   )}
                 </div>
@@ -102,8 +111,6 @@ const ChatPage = () => {
             )}
           </div>
         ))}
-
-        {/* Loading indicator */}
         {isLoading && (
           <div className="flex items-start gap-2 px-3 pt-6 pr-14">
             <div className="bg-primary/12 flex size-8 shrink-0 items-center justify-center rounded-full border">
@@ -113,8 +120,6 @@ const ChatPage = () => {
           </div>
         )}
       </div>
-
-      {/* Input Container */}
       <div className="bg-muted fixed right-0 bottom-0 left-0 p-5">
         <form onSubmit={handleSubmit} className="flex items-center gap-2">
           <Input

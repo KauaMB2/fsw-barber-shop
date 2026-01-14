@@ -2,7 +2,7 @@ import { openai } from "@ai-sdk/openai";
 import { convertToModelMessages, stepCountIs, streamText, tool } from "ai";
 import z from "zod";
 
-import { createBooking } from "@/actions/create-booking";
+import { createBookingCheckoutSession } from "@/actions/create-booking-checkout-session";
 import { getDateAvailableTimeSlots } from "@/actions/get-date-available-time-slots";
 import { prisma } from "@/lib/prisma";
 
@@ -20,7 +20,7 @@ export const POST = async (request: Request) => {
       month: "long",
       day: "numeric",
     })} (${new Date().toISOString().split("T")[0]})
-chat/r
+
     Seu objetivo é ajudar os usuários a:
     - Encontrar barbearias (por nome ou todas disponíveis)
     - Verificar disponibilidade de horários para barbearias específicas
@@ -56,13 +56,16 @@ chat/r
     - Preço
 
     Criação da reserva:
-    - Após o usuário confirmar explicitamente a escolha (ex: "confirmo", "pode agendar", "quero esse horário"), use a tool createBooking
+    - Após o usuário confirmar explicitamente a escolha (ex: "confirmo", "pode agendar", "quero esse horário"), use a tool createBookingCheckout
     - Parâmetros necessários:
       * serviceId: ID do serviço escolhido
       * date: Data e horário no formato ISO (YYYY-MM-DDTHH:mm:ss) - exemplo: "2025-11-05T10:00:00"
-    - Se a criação for bem-sucedida (success: true), informe ao usuário que a reserva foi confirmada com sucesso
+    - Se a criação for bem-sucedida (success: true e checkoutUrl presente):
+      * Informe ao usuário que o agendamento foi iniciado
+      * Diga que ele será redirecionado para a página de pagamento
+      * IMPORTANTE: Retorne o checkoutUrl no formato especial: [CHECKOUT_URL:url_aqui]
     - Se houver erro (success: false), explique o erro ao usuário:
-      * Se o erro for "User must be logged in", informe que é necessário fazer login para criar uma reserva
+      * Se o erro contiver "login", informe que é necessário fazer login para criar uma reserva
       * Para outros erros, informe que houve um problema e peça para tentar novamente
 
     Importante:
@@ -131,31 +134,52 @@ chat/r
           };
         },
       }),
-      createBooking: tool({
+      createBookingCheckout: tool({
         description:
-          "Cria um novo agendamento para um serviço específico em uma data específica.",
+          "Cria uma sessão de checkout para um agendamento de serviço específico em uma data específica.",
         inputSchema: z.object({
           serviceId: z.uuid(),
           date: z
             .string()
             .describe(
-              "A data no formato ISO (YYYY-MM-DD) para a qual você deseja criar o agendamento.",
+              "A data e hora no formato ISO (YYYY-MM-DDTHH:mm:ss) para a qual você deseja criar o agendamento.",
             ),
         }),
         execute: async ({ serviceId, date }) => {
-          console.log("createBooking", serviceId, date);
+          console.log("createBookingCheckout", serviceId, date);
           try {
-            await createBooking({
+            const result = await createBookingCheckoutSession({
               serviceId,
               date: new Date(date),
             });
-            return {
-              success: true,
-            };
-          } catch (error) {
-            console.error("createBooking error", error);
+            if (result?.validationErrors) {
+              return {
+                success: false,
+                error: result.validationErrors._errors?.[0] || "Erro de validação",
+              };
+            }
+            if (result?.serverError) {
+              return {
+                success: false,
+                error: "Erro ao criar sessão de checkout",
+              };
+            }
+            if (result?.data?.url) {
+              return {
+                success: true,
+                checkoutUrl: result.data.url,
+              };
+            }
+
             return {
               success: false,
+              error: "Sessão de checkout não retornou URL",
+            };
+          } catch (error) {
+            console.error("createBookingCheckout error", error);
+            return {
+              success: false,
+              error: error instanceof Error ? error.message : "Erro desconhecido",
             };
           }
         },

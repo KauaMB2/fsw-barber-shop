@@ -141,11 +141,11 @@ const BookingInfoSheet = ({ booking, onClose }: BookingInfoSheetProps) => {
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel>Não, manter reserva</AlertDialogCancel>
+                <AlertDialogCancel className="hover:cursor-pointer">Não, manter reserva</AlertDialogCancel>
                 <AlertDialogAction
                   onClick={handleCancelBooking}
                   disabled={isCancelling}
-                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90 hover:cursor-pointer"
                 >
                   {isCancelling ? (
                     <Loader2 className="size-4 animate-spin" />
