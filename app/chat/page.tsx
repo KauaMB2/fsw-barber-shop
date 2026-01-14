@@ -8,6 +8,7 @@ import { useState } from "react";
 import { Streamdown } from "streamdown";
 
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 const ChatPage = () => {
   const { messages, sendMessage, status } = useChat({
@@ -32,7 +33,7 @@ const ChatPage = () => {
       {/* Header */}
       <header className="flex items-center justify-between px-5 pt-6">
         <Link href="/">
-          <Button variant="ghost" size="icon" className="size-6">
+          <Button variant="ghost" size="icon" className="size-6 hover:cursor-pointer">
             <ChevronLeft className="size-6" />
           </Button>
         </Link>
@@ -116,18 +117,18 @@ const ChatPage = () => {
       {/* Input Container */}
       <div className="bg-muted fixed right-0 bottom-0 left-0 p-5">
         <form onSubmit={handleSubmit} className="flex items-center gap-2">
-          <input
+          <Input
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Digite sua mensagem"
             disabled={isLoading}
-            className="bg-background text-foreground placeholder:text-muted-foreground flex-1 rounded-full px-4 py-3 text-sm outline-none"
+            className="bg-background text-foreground placeholder:text-muted-foreground flex-1 rounded-full px-4 py-3 text-sm border-border"
           />
           <Button
             type="submit"
             disabled={isLoading || !input.trim()}
-            className="size-10.5 shrink-0 rounded-full"
+            className="size-10.5 shrink-0 rounded-full hover:cursor-pointer"
           >
             <Send className="size-5" />
           </Button>

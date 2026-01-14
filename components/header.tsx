@@ -13,7 +13,7 @@ const Header = () => {
       </Link>
       <div className="flex items-center gap-2">
         <Link href="/chat">
-          <Button variant="outline" size="icon">
+          <Button variant="outline" size="icon" className="hover:cursor-pointer">
             <BotMessageSquare className="size-5" />
           </Button>
         </Link>

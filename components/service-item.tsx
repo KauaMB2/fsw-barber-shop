@@ -128,7 +128,7 @@ const ServiceItem = ({ service, barbershop }: ServiceItemProps) => {
 
           <Sheet open={sheetIsOpen} onOpenChange={setSheetIsOpen}>
             <SheetTrigger asChild>
-              <Button className="rounded-full" size="sm">
+              <Button className="rounded-full hover:cursor-pointer" size="sm">
                 Reservar
               </Button>
             </SheetTrigger>
@@ -165,12 +165,12 @@ const ServiceItem = ({ service, barbershop }: ServiceItemProps) => {
 
               {/* Time Selection */}
               {selectedDate && (
-                <div className="border-border flex gap-3 overflow-x-auto border-b px-5 py-6 [&::-webkit-scrollbar]:hidden">
+                <div className="border-border flex gap-3 overflow-y-hidden overflow-x-auto border-b px-5 ">
                   {availableTimeSlots?.data?.map((time) => (
                     <Button
                       key={time}
                       variant={selectedTime === time ? "default" : "outline"}
-                      className="rounded-full"
+                      className="rounded-full hover:cursor-pointer"
                       onClick={() => handleTimeSelect(time)}
                     >
                       {time}
@@ -194,7 +194,7 @@ const ServiceItem = ({ service, barbershop }: ServiceItemProps) => {
 
               <SheetFooter className="px-5 pb-6">
                 <Button
-                  className="w-full"
+                  className="w-full hover:cursor-pointer"
                   disabled={!selectedDate || !selectedTime || isCreatingBooking}
                   onClick={handleConfirmBooking}
                 >

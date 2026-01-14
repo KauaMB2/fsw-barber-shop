@@ -12,7 +12,7 @@ const envSchema = z.object({
   NEXT_PUBLIC_APP_URL: z.url("NEXT_PUBLIC_APP_URL deve ser uma URL válida"),
   GOOGLE_CLIENT_SECRET: z.string(),
   GOOGLE_CLIENT_ID: z.string(),
-  GOOGLE_GENERATIVE_AI_API_KEY: z.string(),
+  OPENAI_API_KEY: z.string(),
   NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: z.string(),
   STRIPE_SECRET_KEY: z.string(),
   STRIPE_WEBHOOK_SECRET_KEY: z.string(),

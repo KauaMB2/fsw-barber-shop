@@ -10,6 +10,7 @@ import CopyButton from "@/app/barbershops/[id]/_components/copy-button";
 import { BookingWithRelations } from "@/data/bookings";
 import { getBookingStatus } from "@/lib/booking-status";
 
+import mapImage from "./../public/map.png";
 import BookingSummary from "./booking-summary";
 import {
   AlertDialog,
@@ -62,7 +63,7 @@ const BookingInfoSheet = ({ booking, onClose }: BookingInfoSheetProps) => {
 
       <div className="flex flex-1 flex-col gap-6 px-5 py-6">
         <div className="relative h-45 w-full overflow-hidden rounded-lg">
-          <Image src="/map.png" alt="Mapa" fill className="object-cover" />
+          <Image src={mapImage} alt="Mapa" fill className="object-cover" />
           <div className="bg-background absolute right-5 bottom-5 left-5 flex items-center gap-3 rounded-lg px-5 py-3">
             <Avatar className="size-12">
               <AvatarImage src={booking.barbershop.imageUrl} />
@@ -118,7 +119,7 @@ const BookingInfoSheet = ({ booking, onClose }: BookingInfoSheetProps) => {
       <div className="flex gap-3 border-t px-5 py-6">
         <Button
           variant="outline"
-          className="flex-1 rounded-full"
+          className="flex-1 rounded-full hover:cursor-pointer"
           onClick={onClose}
         >
           Voltar
@@ -127,7 +128,7 @@ const BookingInfoSheet = ({ booking, onClose }: BookingInfoSheetProps) => {
         {status === "confirmed" && (
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <Button variant="destructive" className="flex-1 rounded-full">
+              <Button variant="destructive" className="flex-1 rounded-full hover:cursor-pointer">
                 Cancelar Reserva
               </Button>
             </AlertDialogTrigger>

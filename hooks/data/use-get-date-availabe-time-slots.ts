@@ -1,6 +1,7 @@
+import { useQuery } from "@tanstack/react-query";
+
 import { getDateAvailableTimeSlots } from "@/actions/get-date-available-time-slots";
 import { queryKeys } from "@/constants/query-keys";
-import { useQuery } from "@tanstack/react-query";
 
 export const useGetDateAvailableTimeSlots = ({
   barbershopId,

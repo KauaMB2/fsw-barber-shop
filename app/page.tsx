@@ -29,7 +29,7 @@ export default async function Home() {
           src={banner}
           alt="Agende nos melhores com a Aparatus"
           sizes="100vw"
-          className="h-auto w-full"
+          className="h-auto w-full lg:hidden"
         />
         {confirmedBookings.length > 0 && (
           <PageSectionContent>

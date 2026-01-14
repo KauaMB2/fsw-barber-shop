@@ -12,7 +12,7 @@ const BackButton = () => {
     <Button
       variant="outline"
       size="icon"
-      className="absolute left-5 top-6 rounded-full bg-background"
+      className="absolute left-5 top-6 rounded-full bg-background hover:cursor-pointer"
       onClick={() => router.back()}
     >
       <ChevronLeft />

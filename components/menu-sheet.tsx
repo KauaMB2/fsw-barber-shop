@@ -5,6 +5,7 @@ import Link from "next/link";
 import { toast } from "sonner";
 
 import { authClient } from "@/lib/auth-client";
+import { categories } from "@/lib/utils";
 
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Button } from "./ui/button";
@@ -16,15 +17,6 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "./ui/sheet";
-
-const categories = [
-  { label: "Cabelo", search: "cabelo" },
-  { label: "Barba", search: "barba" },
-  { label: "Acabamento", search: "acabamento" },
-  { label: "Sobrancelha", search: "sobrancelha" },
-  { label: "Massagem", search: "massagem" },
-  { label: "Hidratacao", search: "hidratacao" },
-];
 
 const MenuSheet = () => {
   const { data: session } = authClient.useSession();
@@ -48,7 +40,7 @@ const MenuSheet = () => {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant="outline" size="icon">
+        <Button variant="outline" size="icon" className="hover:cursor-pointer">
           <MenuIcon />
         </Button>
       </SheetTrigger>
@@ -80,7 +72,7 @@ const MenuSheet = () => {
             ) : (
               <>
                 <p className="font-semibold">Olá. Faça seu login!</p>
-                <Button className="gap-3 rounded-full" onClick={handleLogin}>
+                <Button className="gap-3 rounded-full hover:cursor-pointer" onClick={handleLogin}>
                   Login
                   <LogIn className="size-4" />
                 </Button>
@@ -129,7 +121,7 @@ const MenuSheet = () => {
           {isLoggedIn && (
             <Button
               variant="ghost"
-              className="justify-left w-fit text-left"
+              className="justify-left w-fit text-left hover:cursor-pointer"
               onClick={handleLogout}
             >
               <LogOut className="size-4" />

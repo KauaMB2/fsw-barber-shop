@@ -17,7 +17,7 @@ const CopyButton = ({ text }: CopyButtonProps) => {
   return (
     <Button
       variant="outline"
-      className="rounded-full"
+      className="rounded-full hover:cursor-pointer"
       size="sm"
       onClick={handleCopy}
     >
