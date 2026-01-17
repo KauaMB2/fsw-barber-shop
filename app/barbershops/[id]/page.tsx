@@ -21,7 +21,7 @@ const BarbershopPage = async ({ params }: PageProps<"/barbershops/[id]">) => {
   return (
     <div>
       {/* Banner Header */}
-      <div className="relative h-[297px] w-full">
+      <div className="relative h-74.25 w-full">
         <Image
           src={barbershop.imageUrl}
           alt={barbershop.name}
@@ -36,7 +36,7 @@ const BarbershopPage = async ({ params }: PageProps<"/barbershops/[id]">) => {
         {/* Barbershop Info */}
         <div className="flex flex-col gap-1 px-5 pt-6">
           <div className="flex items-center gap-1.5">
-            <div className="relative size-[30px] shrink-0">
+            <div className="relative size-7.5 shrink-0">
               <Image
                 src={barbershop.imageUrl}
                 alt={barbershop.name}
@@ -99,7 +99,7 @@ const BarbershopPage = async ({ params }: PageProps<"/barbershops/[id]">) => {
         </div>
 
         {/* Footer spacing */}
-        <div className="pt-[60px]" />
+        <div className="pt-15" />
       </div>
       <Footer />
     </div>
